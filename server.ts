@@ -1,14 +1,27 @@
-import express from "express"
-import cors from "cors";
-const PORT =3000
-const app = express();
+import express from "express";
+import http from "http";
+import dotenv from "dotenv";
+dotenv.config();
+import SocketService from "./services/socket";
 
+const PORT = process.env.PORT ? process.env.PORT : 8000;
 
-app.use(cors());
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }));
+async function init() {
+  // initialized socketServer;
+  const socket = SocketService.getSocketInstace();
 
+  // initialized sockerServcer class
+  const socketService = SocketService.getClassInstance();
 
-const server = app.listen(PORT, () => {
-    console.log(`Server is running on PORT: ${PORT}`);
-})
+  const HttpServer = http.createServer();
+
+  socket.attach(HttpServer);
+  HttpServer.listen(PORT, () => {
+    console.log(`http server started at port:${PORT}`);
+  });
+
+  socketService.initListener();
+}
+
+// server initialized
+init();
