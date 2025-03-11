@@ -7,13 +7,15 @@ import SocketService from "./services/socket";
 const PORT = process.env.PORT ? process.env.PORT : 8000;
 
 async function init() {
+  
+  const HttpServer = http.createServer();
+
   // initialized socketServer;
   const socket = SocketService.getSocketInstace();
 
   // initialized sockerServcer class
   const socketService = SocketService.getClassInstance();
-
-  const HttpServer = http.createServer();
+  
 
   socket.attach(HttpServer);
   HttpServer.listen(PORT, () => {
